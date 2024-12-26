@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Get My Location";
+}
+
+<div class="container py-5">
+    <div class="text-center">
+        <h1 class="display-4 text-primary">Find My Location</h1>
+        <p class="lead">ดึงพิกัดของฉันอัตโนมัติ</p>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-6 col-md-8 col-12">
+            <div class="card shadow p-4 bg-white">
+                <div class="mb-3">
+                    <label for="latitude" class="form-label">Latitude</label>
+                    <input type="text" id="latitude" class="form-control" readonly />
+                </div>
+                <div class="mb-3">
+                    <label for="longitude" class="form-label">Longitude</label>
+                    <input type="text" id="longitude" class="form-control" readonly />
+                </div>
+                <div class="d-grid gap-2">
+                    <button id="openMapsBtn" class="btn btn-primary btn-lg" disabled>Go to Google Maps</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const latitudeInput = document.getElementById("latitude");
+        const longitudeInput = document.getElementById("longitude");
+        const openMapsBtn = document.getElementById("openMapsBtn");
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    latitudeInput.value = latitude;
+                    longitudeInput.value = longitude;
+
+                    openMapsBtn.disabled = false;
+
+                    openMapsBtn.addEventListener("click", () => {
+                        const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                        window.open(googleMapsUrl, "_blank");
+                    });
+                },
+                () => {
+                    alert("ไม่สามารถดึงพิกัดได้ โปรดเปิด Location Service!");
+                }
+            );
+        } else {
+            alert("เบราเซอร์ของคุณไม่รองรับ Geolocation API");
+        }
+    });
+</script>
